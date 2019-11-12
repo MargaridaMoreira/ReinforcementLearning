@@ -1,7 +1,7 @@
 import random
 
 # LearningAgent to implement
-# no knowledeg about the environment can be used
+# no knowledge about the environment can be used
 # the code should work even with another environment
 class LearningAgent:
 
