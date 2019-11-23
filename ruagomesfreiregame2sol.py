@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 # LearningAgent to implement
 # no knowledge about the environment can be used
@@ -66,9 +67,8 @@ class LearningAgent:
                 #print("learn something from this data")
 
                 #finds max of Q[y][b] (row of ost)
-                #
+                #max = np.max(Q[ost, :])
 
                 #updates reward of matrix 
                 #Q[ost][a] = Q[ost][a] + self.alpha*(r + self.gamma*max - Q[ost][a])
-                
                 return
