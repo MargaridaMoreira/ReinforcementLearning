@@ -39,15 +39,24 @@ class LearningAgent:
 
                 #change epsilon with time
                 
-                a = 0
+                a = -1
                 
                 #random.uniform(0, 1) = current epsilon
                 #if current epsilon < self.epsilon then selected a random action from aa or random undiscovered from aa(if there is one)
                 #else selected action with best reward 
 
-                # if random.uniform(0, 1) < self.epsilon:
-                #         a = random.choice(aa)                        
-         
+                if random.uniform(0, 1) < self.epsilon:
+                        randomAction = random.choice(aa) 
+                        a = 0
+                        for i in aa:
+                                if randomAction == i:
+                                        break
+                                a+=1
+                else:
+                        for i in range(len(aa)):
+                                if a < self.Q[st][i]:
+                                        a = i                     
+
                 return a
 
         # Select one action, used when evaluating
@@ -83,8 +92,7 @@ class LearningAgent:
 
                 #finds max of Q[y][b] (row of ost)
                 max = np.max(self.Q[nst, :])
-
                 #updates quality of matrix 
-                q = self.Q[ost][a] = self.Q[ost][a] + self.alpha*(r + self.gamma*max - self.Q[ost][a])
 
-                return q
+                self.Q[ost][a] = self.Q[ost][a] + self.alpha*(r + self.gamma*max - self.Q[ost][a])
+
