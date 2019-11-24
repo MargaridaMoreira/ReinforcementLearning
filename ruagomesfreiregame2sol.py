@@ -14,14 +14,16 @@ class LearningAgent:
                 self.nS = nS
                 self.nA = nA
 
-                self.alpha = 0.9 #Learning rate
-                self.gamma = 0.75 #Discount rate
+                self.alpha = 0.5 #Learning rate
+                self.gamma = 0.4 #Discount rate
                 self.epsilon = 0.2 #Exploration/Exploitation balance
 
                 #initialize matrix with number of states per number of actions per state 
-                #(all with value "none" to identify if it has been already tested or not)
-                #we will update the value to a number if it was already tested
-                # self.Q = [nS] * [nA] -> initialize with None
+                #(all with value zero to identify if it has been already tested or not)
+                #we will update the value to another if it was already tested
+                # self.Q = [nS] * [nA] -> initialize with zero
+                
+                self.Q = np.array([[ 0 for i in range(nA)] for j in range(nS)])
                 
               
         
@@ -35,12 +37,17 @@ class LearningAgent:
                 # define this function
                 # print("select one action to learn better")
 
-                #random.uniform(0, 1) = current epsilon
-                #if current epsilon < self.epsilon then selected a random action from aa
-                #else selected action with best reward 
+                #change epsilon with time
                 
-
                 a = 0
+                
+                #random.uniform(0, 1) = current epsilon
+                #if current epsilon < self.epsilon then selected a random action from aa or random undiscovered from aa(if there is one)
+                #else selected action with best reward 
+
+                # if random.uniform(0, 1) < self.epsilon:
+                #         a = random.choice(aa)                        
+         
                 return a
 
         # Select one action, used when evaluating
@@ -56,8 +63,12 @@ class LearningAgent:
                 #Go to matrix and find the action with the best reward to execute 
                 #max = np.max(Q[st, :])
                 #max in possible actions (aa)
-
+                
                 a = 0
+                for i in aa:
+                        if self.Q[st][i] > a:
+                                a = self.Q[st][i]
+                
                 return a
 
 
@@ -71,8 +82,9 @@ class LearningAgent:
                 #print("learn something from this data")
 
                 #finds max of Q[y][b] (row of ost)
-                #max = np.max(Q[nst, :])
+                max = np.max(self.Q[nst, :])
 
-                #updates reward of matrix 
-                #Q[ost][a] = Q[ost][a] + self.alpha*(r + self.gamma*max - Q[ost][a])
-                return
+                #updates quality of matrix 
+                q = self.Q[ost][a] = self.Q[ost][a] + self.alpha*(r + self.gamma*max - self.Q[ost][a])
+
+                return q
