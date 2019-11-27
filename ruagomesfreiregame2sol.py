@@ -16,10 +16,9 @@ class LearningAgent:
                 self.nA = nA
 
                 self.alpha = 0.5 #Learning rate
-                self.gamma = 0.3 #Discount rate
-                self.epsilon = 0.3 #Exploration/Exploitation balance
+                self.gamma = 0.4 #Discount rate
+                # self.epsilon = 0.3 #Exploration/Exploitation balance
 
-                self.possibleActions = 0
 
                 #initialize matrix with number of states per number of actions per state 
                 #(all with value zero to identify if it has been already tested or not)
@@ -27,6 +26,10 @@ class LearningAgent:
                 # self.Q = [nS] * [nA] -> initialize with zero
                 
                 self.Q = np.array([[ 0.0 for i in range(nA)] for j in range(nS)])
+                self.Frequency = np.array([[ 0 for i in range(nA)] for j in range(nS)])
+                
+                self.possibleActions = np.array([ 0 for i in range(nS)])
+                
                 
               
         
@@ -43,8 +46,8 @@ class LearningAgent:
                 #change epsilon with time
                 
                 a = 0
-                value = self.Q[st][a]
-                self.possibleActions = len(aa)
+                value = self.Frequency[st][a]
+                self.possibleActions[st] = len(aa)
                 
                 #random.uniform(0, 1) = current epsilon
                 #if current epsilon < self.epsilon then selected a random action from aa or random undiscovered from aa(if there is one)
@@ -54,22 +57,24 @@ class LearningAgent:
                 #Matrix that saves information about the frequency of each action
                 #No need to use self.epsilon
 
-                if random.uniform(0, 1) < self.epsilon:
-                        randomAction = random.choice(aa) 
-                        for i in aa:
-                                if randomAction == i:
-                                        break
-                                a+=1
-                else:
-                        for i in range(len(aa)):
-                                if value < self.Q[st][i]:
-                                        value = self.Q[st][i]  
-                                        a = i 
-                # for i in range(len(aa)):
-                #         if value < self.Q[st][i]:
-                #                 value = self.Q[st][i]  
-                #                 a = i 
-                                                         
+                # if random.uniform(0, 1) < self.epsilon:
+                #         randomAction = random.choice(aa) 
+                #         for i in aa:
+                #                 if randomAction == i:
+                #                         break
+                #                 a+=1
+                # else:
+                #         for i in range(len(aa)):
+                #                 if value < self.Q[st][i]:
+                #                         value = self.Q[st][i]  
+                #                         a = i 
+
+                for i in range(len(aa)):
+                        if value > self.Frequency[st][i]: 
+                                value = self.Frequency[st][i]
+                                a = i
+                self.Frequency[st][a] += 1
+                               
                 return a
 
         # Select one action, used when evaluating
@@ -101,10 +106,10 @@ class LearningAgent:
         # r - reward obtained
         def learn(self,ost,nst,a,r):
                 #print("learn something from this data")
-
+                
                 #finds max of Q[y][b] (row of ost)
                 max = -math.inf
-                for i in range(self.possibleActions):
+                for i in range(self.possibleActions[nst]):
                         if self.Q[nst][i] > max:
                                 max = self.Q[nst][i]
 
