@@ -15,7 +15,7 @@ class LearningAgent:
                 self.nS = nS
                 self.nA = nA
 
-                self.alpha = 0.5 #Learning rate
+                self.alpha = 0.8 #Learning rate
                 self.gamma = 0.4 #Discount rate
                 # self.epsilon = 0.3 #Exploration/Exploitation balance
 
@@ -49,13 +49,6 @@ class LearningAgent:
                 value = self.Frequency[st][a]
                 self.possibleActions[st] = len(aa)
                 
-                #random.uniform(0, 1) = current epsilon
-                #if current epsilon < self.epsilon then selected a random action from aa or random undiscovered from aa(if there is one)
-                #else selected action with best reward 
-
-                #NOTA
-                #Matrix that saves information about the frequency of each action
-                #No need to use self.epsilon
 
                 # if random.uniform(0, 1) < self.epsilon:
                 #         randomAction = random.choice(aa) 
@@ -112,6 +105,8 @@ class LearningAgent:
                 for i in range(self.possibleActions[nst]):
                         if self.Q[nst][i] > max:
                                 max = self.Q[nst][i]
+                if max == -math.inf:
+                        max = 0
 
                 #max = np.max(self.Q[nst, :])
                 #updates quality in Q 
