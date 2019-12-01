@@ -17,17 +17,15 @@ class LearningAgent:
 
                 self.alpha = 0.8 #Learning rate
                 self.gamma = 0.4 #Discount rate
-                # self.epsilon = 0.3 #Exploration/Exploitation balance
 
-
-                #initialize matrix with number of states per number of actions per state 
-                #(all with value zero to identify if it has been already tested or not)
-                #we will update the value to another if it was already tested
-                # self.Q = [nS] * [nA] -> initialize with zero
-                
+                #initialize matrix with number of states per number of actions per state
+                #(will keep track of rewards)                 
                 self.Q = np.array([[ 0.0 for i in range(nA)] for j in range(nS)])
+
+                #initialize matrix with the frequency of each action per state
                 self.Frequency = np.array([[ 0 for i in range(nA)] for j in range(nS)])
                 
+                #intialize array with numver of possible actions per state
                 self.possibleActions = np.array([ 0 for i in range(nS)])
                 
                 
@@ -40,28 +38,12 @@ class LearningAgent:
         # returns
         # a - the index to the action in aa
         def selectactiontolearn(self,st,aa):
-                # define this function
-                # print("select one action to learn better")
-
-                #change epsilon with time
-                
+                       
                 a = 0
                 value = self.Frequency[st][a]
                 self.possibleActions[st] = len(aa)
                 
-
-                # if random.uniform(0, 1) < self.epsilon:
-                #         randomAction = random.choice(aa) 
-                #         for i in aa:
-                #                 if randomAction == i:
-                #                         break
-                #                 a+=1
-                # else:
-                #         for i in range(len(aa)):
-                #                 if value < self.Q[st][i]:
-                #                         value = self.Q[st][i]  
-                #                         a = i 
-
+                #Go to matrix Q and find the action with the lowest frequency to learn
                 for i in range(len(aa)):
                         if value > self.Frequency[st][i]: 
                                 value = self.Frequency[st][i]
@@ -80,9 +62,7 @@ class LearningAgent:
                 # define this function
                 # print("select one action to see if I learned")
 
-                #Go to matrix and find the action with the best reward to execute 
-                #max = np.max(Q[st, :])
-                #max in possible actions (aa)
+                #Go to matrix Q and find the action with the best reward to execute 
                 a = 0
                 value = self.Q[st][a]
                 for i in range(len(aa)):
